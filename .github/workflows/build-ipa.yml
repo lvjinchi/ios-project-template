@@ -1,4 +1,4 @@
-name: Build iOS IPA (No Code Signing)
+name: Build iOS IPA
 
 on:
   workflow_dispatch:
@@ -10,18 +10,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Show Xcode version
-        run: xcodebuild -version
+      - name: List files to check project name
+        run: ls -la
 
-      # 直接编译模拟器版本，不签名，不报错
-      - name: Build for iOS Simulator
+      - name: Build for Simulator (TEST ONLY - NO SIGNING)
         run: |
-          xcodebuild -project "iOS Project Template.xcodeproj" \
-            -scheme "iOS Project Template" \
+          xcodebuild build -project "iosProjectTemplate.xcodeproj" \
+            -scheme "iosProjectTemplate" \
             -destination "platform=iOS Simulator,name=iPhone 15,OS=latest" \
-            -configuration Release \
-            clean build
-
-      # 生成可分发的 .app (不需要IPA也能验证流程)
-      - name: List build files
-        run: ls -la build/Release-iphonesimulator/
+            -configuration Release
