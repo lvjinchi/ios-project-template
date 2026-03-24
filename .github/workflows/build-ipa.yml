@@ -2,25 +2,45 @@ name: Build iOS
 
 on:
   push:
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      # 👉 就是这一步！解决你所有错误
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 可选：指定 Xcode 版本（避免版本漂移）
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.2'   # 根据项目兼容性调整，也可去掉此步
+
+      # 安装 Carthage（解决脚本找不到 carthage 的问题）
       - name: Install Carthage
         run: brew install carthage
 
-      # 👉 纯编译，不指定设备
-      - name: Build Project
+      # 拉取并构建 Carthage 依赖（使用缓存加速）
+      - name: Bootstrap Carthage dependencies
+        run: carthage bootstrap --platform iOS --use-xcframeworks --cache-builds
+
+      # 列出项目文件，确认 .xcodeproj 的实际名称（调试用，可删除）
+      - name: List project files
+        run: ls -la
+
+      # 执行 Archive 构建（不签名，仅验证编译）
+      - name: Build Archive
         run: |
-          xcodebuild build \
-            -project "iOSProject.xcodeproj" \
-            -scheme "iOSProject" \
-            -sdk iphonesimulator \
-            -configuration Debug \
-            SKIP_SWIFTLINT=YES
+          xcodebuild archive \
+            -project "iOS Project Template.xcodeproj" \
+            -scheme "iOS Project Template" \
+            -destination "generic/platform=iOS" \
+            -archivePath build/App.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
