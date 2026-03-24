@@ -1,4 +1,4 @@
-name: Build iOS IPA
+name: Build iOS App Success
 
 on:
   workflow_dispatch:
@@ -10,10 +10,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: List files to check project name
+      - name: List all files
         run: ls -la
 
-      - name: Build for Simulator (TEST ONLY - NO SIGNING)
+      - name: Build iOS Project (CORRECT NAME)
         run: |
           xcodebuild build -project "iosProjectTemplate.xcodeproj" \
             -scheme "iosProjectTemplate" \
