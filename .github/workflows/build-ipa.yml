@@ -1,4 +1,4 @@
-name: iOS Build 100% Working
+name: Build iOS NO DESTINATION
 on:
   workflow_dispatch
 
@@ -8,10 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build For Simulator
+      - name: Build WITHOUT destination
         run: |
           xcodebuild build -project "iOSProject.xcodeproj" \
             -scheme "iOSProject" \
-            -destination "platform=iOS Simulator" \
             -configuration Debug \
             SKIP_SWIFTLINT=YES
