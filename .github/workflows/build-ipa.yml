@@ -1,4 +1,4 @@
-name: Build iOS App Success
+name: Build iOS App (No Signing, No Errors)
 
 on:
   workflow_dispatch:
@@ -10,10 +10,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: List all files
-        run: ls -la
+      # 先确认项目文件名，避免再错
+      - name: ios-project-template
+        run: ls -la *.xcodeproj
 
-      - name: Build iOS Project (CORRECT NAME)
+      # 用正确的项目名 + 模拟器编译，彻底避开签名问题
+      - name: ios-project-template
         run: |
           xcodebuild build -project "iosProjectTemplate.xcodeproj" \
             -scheme "iosProjectTemplate" \
