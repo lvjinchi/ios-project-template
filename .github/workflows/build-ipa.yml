@@ -1,4 +1,4 @@
-name: Build iOS App (No Signing)
+name: Build iOS App (100% FIXED)
 
 on:
   workflow_dispatch
@@ -8,6 +8,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - run: ls -la
-      - name: Build
-        run: xcodebuild build -project "iOSProject.xcodeproj" -scheme "iosProjectTemplate" -destination "platform=iOS Simulator,name=iPhone 15,OS=latest"
+
+      - name: Build iOS Project (CORRECT NAME)
+        run: |
+          xcodebuild build -project "iOSProject.xcodeproj" \
+            -scheme "iOSProject" \
+            -destination "platform=iOS Simulator,name=iPhone 15,OS=latest"
