@@ -1,4 +1,4 @@
-name: List Simulators
+name: Show Supported Destinations
 on:
   workflow_dispatch
 
@@ -7,5 +7,5 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Show all iOS simulators
-        run: xcrun xctrace list devices
+      - name: Show supported destinations
+        run: xcodebuild -showdestinations -project "iOSProject.xcodeproj" -scheme "iOSProject"
