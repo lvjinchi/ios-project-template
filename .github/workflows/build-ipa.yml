@@ -1,21 +1,17 @@
-name: Build iOS Success
+name: iOS Build 100% Working
 on:
   workflow_dispatch
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: List schemes
-        run: xcodebuild -list -project iOSProject.xcodeproj
-
-      - name: Build Clean
+      - name: Build For Simulator
         run: |
           xcodebuild build -project "iOSProject.xcodeproj" \
             -scheme "iOSProject" \
-            -destination "platform=iOS Simulator,name=iPhone 14" \
+            -destination "platform=iOS Simulator" \
             -configuration Debug \
-            SWIFT_COMPILATION_MODE=singlefile \
             SKIP_SWIFTLINT=YES
