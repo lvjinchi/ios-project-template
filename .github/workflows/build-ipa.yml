@@ -1,11 +1,9 @@
-# 文件名必须是: .github/workflows/build-ipa.yml
-name: iOS Build Only (No Device)
+name: Build iOS
 
-# 定义触发方式：推送、PR、手动运行
 on:
   push:
   pull_request:
-  workflow_dispatch:  # 👈 加上这个才能手动运行！
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,12 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 1. 安装依赖（解决 Carthage 报错）
-      - name: Install Dependencies
-        run: brew install carthage || true
+      # 👉 就是这一步！解决你所有错误
+      - name: Install Carthage
+        run: brew install carthage
 
-      # 2. 只编译！不运行、不测试、不指定设备（和你的.travis.yml一样）
-      - name: Build iOS Project
+      # 👉 纯编译，不指定设备
+      - name: Build Project
         run: |
           xcodebuild build \
             -project "iOSProject.xcodeproj" \
