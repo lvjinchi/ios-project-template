@@ -15,21 +15,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 可选：指定 Xcode 版本（避免版本漂移）
+      # 可选：指定 Xcode 版本（使用当前可用的稳定版本，如 16.4.0）
+      # 若不需要固定版本，可注释或删除此步骤
       - name: Select Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.2'   # 根据项目兼容性调整，也可去掉此步
+          xcode-version: '16.4.0'   # 根据可用列表修改，或去掉此步
 
       # 安装 Carthage（解决脚本找不到 carthage 的问题）
       - name: Install Carthage
         run: brew install carthage
 
-      # 拉取并构建 Carthage 依赖（使用缓存加速）
+      # 拉取并构建 Carthage 依赖
       - name: Bootstrap Carthage dependencies
         run: carthage bootstrap --platform iOS --use-xcframeworks --cache-builds
 
-      # 列出项目文件，确认 .xcodeproj 的实际名称（调试用，可删除）
+      # 列出项目文件（调试用，可删除）
       - name: List project files
         run: ls -la
 
