@@ -1,6 +1,5 @@
-name: Build iOS 100% SUCCESS
-on:
-  workflow_dispatch
+name: Build
+on: [push, pull_request]
 
 jobs:
   build:
@@ -8,10 +7,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build with REAL iPhone 16
+      # 安装 carthage（解决你之前的报错！）
+      - name: Install Carthage
+        run: brew install carthage
+
+      # 纯编译，不指定设备！和你的travis.yml一样
+      - name: Build project
         run: |
-          xcodebuild build -project "iOSProject.xcodeproj" \
+          xcodebuild build \
+            -project "iOSProject.xcodeproj" \
             -scheme "iOSProject" \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.6" \
+            -sdk iphonesimulator \
             -configuration Debug \
             SKIP_SWIFTLINT=YES
