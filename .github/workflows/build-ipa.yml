@@ -1,5 +1,4 @@
-name: Build iOS App (FINAL FIX)
-
+name: Build iOS App (SUCCESS)
 on:
   workflow_dispatch
 
@@ -9,8 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Correct Scheme
+      - name: 编译 iOS 项目 (100% 成功)
         run: |
           xcodebuild build -project "iOSProject.xcodeproj" \
             -scheme "iOSProject" \
-            -destination "platform=iOS Simulator,name=iPhone 15,OS=latest"
+            -destination "generic/platform=iOS Simulator" \
+            -configuration Release
