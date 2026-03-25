@@ -11,35 +11,47 @@ jobs:
   build:
     runs-on: macos-latest
 
+    env:
+      # 使用 GITHUB_TOKEN 提高 API 速率限制
+      GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 可选：指定 Xcode 版本（使用当前可用的稳定版本，如 16.4.0）
-      # 若不需要固定版本，可注释或删除此步骤
+      # 选择可用的 Xcode 版本（16.4.0 在列表中）
       - name: Select Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.4.0'   # 根据可用列表修改，或去掉此步
+          xcode-version: '16.4.0'
 
-      # 安装 Carthage（解决脚本找不到 carthage 的问题）
+      # 缓存 Carthage 的构建产物，避免重复下载和编译
+      - name: Cache Carthage
+        uses: actions/cache@v4
+        with:
+          path: Carthage/Build
+          key: ${{ runner.os }}-carthage-${{ hashFiles('Cartfile.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-carthage-
+
+      # 安装 Carthage（运行器通常已预装，但为了确保版本正确）
       - name: Install Carthage
         run: brew install carthage
 
-      # 拉取并构建 Carthage 依赖
+      # 拉取并构建 Carthage 依赖（使用 --use-xcframeworks 和 --cache-builds）
       - name: Bootstrap Carthage dependencies
         run: carthage bootstrap --platform iOS --use-xcframeworks --cache-builds
 
-      # 列出项目文件（调试用，可删除）
+      # 可选：列出项目文件，确认 .xcodeproj 存在
       - name: List project files
         run: ls -la
 
-      # 执行 Archive 构建（不签名，仅验证编译）
+      # 执行 Archive 构建（跳过代码签名）
       - name: Build Archive
         run: |
           xcodebuild archive \
-            -project "iOS Project Template.xcodeproj" \
-            -scheme "iOS Project Template" \
+            -project "iOSProject.xcodeproj" \
+            -scheme "iOSProject" \
             -destination "generic/platform=iOS" \
             -archivePath build/App.xcarchive \
             CODE_SIGN_IDENTITY="" \
